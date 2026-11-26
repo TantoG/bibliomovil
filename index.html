@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>BiblioMóvil — Catálogo de Biblioteca</title>
+  <meta name="description" content="Buscador móvil para el catálogo de libros en cajas (TGL-1).">
+
+  <!-- iOS Web App / PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BiblioMóvil">
+  <meta name="theme-color" content="#0D1524">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png">
+  <link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-header">
+      <div class="header-row">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+              <path d="M8 7h8"/>
+              <path d="M8 11h6"/>
+            </svg>
+          </span>
+          <div>
+            <h1 class="brand-title">BiblioMóvil</h1>
+          </div>
+        </div>
+
+        <button id="info-btn" class="stats-pill" type="button" aria-label="Información de la base de datos">
+          <span id="stats-pill-text">Cargando…</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input
+          id="search-input"
+          class="search-input"
+          type="search"
+          inputmode="search"
+          enterkeyhint="search"
+          placeholder="Título, autor, género o nº de caja…"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Buscar en la biblioteca"
+        >
+        <button id="clear-search-btn" class="clear-btn hidden" type="button" aria-label="Limpiar búsqueda">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="tabs" role="tablist" aria-label="Vistas del catálogo">
+        <button class="tab-btn active" role="tab" aria-selected="true" data-tab="libros" type="button">Libros</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="cajas" type="button">Cajas</button>
+        <button class="tab-btn" role="tab" aria-selected="false" data-tab="explorar" type="button">Explorar</button>
+      </nav>
+    </header>
+
+    <section id="toolbar" class="toolbar" aria-label="Filtros y orden"></section>
+
+    <main id="main-content" class="main-content">
+      <div id="status-bar" class="status-bar"></div>
+      <div id="quick-jump" class="quick-jump hidden"></div>
+      <div id="results" class="results">
+        <div class="loading-state">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Abriendo base de datos…</p>
+        </div>
+      </div>
+      <div id="load-more-wrap" class="load-more-wrap hidden">
+        <button id="load-more-btn" class="secondary-btn" type="button">Mostrar más resultados</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal detalle de libro -->
+  <div id="book-modal" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-book-title">
+    <div class="sheet">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <span id="modal-book-kicker" class="sheet-kicker">Detalle del volumen</span>
+        <button id="close-book-modal" class="icon-close-btn" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="book-modal-body" class="sheet-body"></div>
+    </div>
+  </div>
+
+  <!-- Modal info de base de datos -->
+  <div id="info-modal" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-info-title">
+    <div class="sheet">
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-header">
+        <h2 id="modal-info-title" class="sheet-title">Estado de la base</h2>
+        <button id="close-info-modal" class="icon-close-btn" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="info-modal-body" class="sheet-body"></div>
+    </div>
+  </div>
+
+  <input id="db-file-input" type="file" accept=".db,.sqlite,.sqlite3" class="sr-only">
+
+  <script src="./vendor/sqljs/sql-wasm-browser.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
